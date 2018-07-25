@@ -39,7 +39,7 @@ var init = false;
 var coins = 0;
 var rates = [1,0];
 var costs = [10,50]
-var features = [false,false,false];
+var features = [false,false];
 var counter = 0;
 function PickUpCoin(){
 	coins+=rates[0];
@@ -119,6 +119,9 @@ function Timed(){
 	coins+=rates[1];
 	if(coins===51){ //Terrible architecture for a terrible idle game
 		Display();
+	}
+	if(features[1]){
+		rates[1]=100;
 	}
 	var x = setTimeout(Timed,50);
 };
