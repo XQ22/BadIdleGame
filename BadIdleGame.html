@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bad Idle Game</title>
+<style>
+body {
+  background-color: #252636;
+  color: #acaeb2;
+}
+  
+h1, h2 {
+  font-family: Arial, Helvetica Neue, monospace;
+}
+
+h1 {
+  font-size: 70px;
+}
+p {
+  font-family: Helvetica, Arial, monospace;
+}
+  
+table {
+  border: 0px;
+}
+
+button {
+  border: none;
+  -webkit-transition-duration: 0.5s;
+  transition-duration: 0.5s;
+}
+
+button:hover {
+  color: #ccced2;
+}
+ 
+</style>
+<script>
+var init = false;
+var coins = 0;
+var rates = [1,0];
+var costs = [10,50]
+var features = [false,false,false];
+var counter = 0;
+function PickUpCoin(){
+	coins+=rates[0];
+	Display();
+};
+function Upgrade(i,a,c){
+	rates[i]+=a;
+	coins-=c;
+	costs[i-1]*=2;
+};
+function Feature(w){
+	features[w] = true;
+	Display();
+};
+function Display(){
+	document.getElementById("body").innerHTML = "<p id=\"Coincounter\"></p>";
+	document.getElementById("body").innerHTML += "<br><button onclick=\"PickUpCoin()\">Pick up a coin</button>";
+	if(coins>costs[0]){document.getElementById("body").innerHTML += "<br><button onclick=\"Upgrade(1,0.5,10)\">Increase the automation level of picking up coins ($"+costs[0]+")</button>";}
+	if(coins>costs[1]&&!features[0]){document.getElementById("body").innerHTML += "<br><button onclick=\"Feature(0)\">Make the game less terrible ($"+costs[1]+")</button>";}
+	if(features[0]){document.getElementById("body").innerHTML += "<br><p>Is that possible?</p><button onclick=\"Summon()\">Summon an alternate game</button>";}
+	if(features[1]){document.getElementById("body").innerHTML += "<br><button onclick=\"End()\">End the game <span id=\"a\">($25001)</span></button><br><p id=\"c\">Why the non-round number for ending the game? Market forces.</p>";}
+	init = true;
+};
+function Summon(){
+	document.getElementById("body").innerHTML += "<br><iframe src=\"Alternate.html\">";
+	document.getElementById("body").innerHTML += "<br><p>Enter the secret code to progress:</p><input id=\"i\"></input><button onclick=\"Submit()\">Enter</button><p style=\"color:red;\" id=\"f\"></p>";
+};
+function Submit(){
+	var e = document.getElementById("i").value;
+	if(e==="547634"){
+		Feature(1);
+		document.getElementById("f").innerHTML = "";
+	} else {
+		document.getElementById("f").innerHTML = "Wrong.";
+	}
+};
+function End(){
+	if(coins>25000){
+		document.getElementById("body").innerHTML = "<p id=\"EndScreen\">You won.<br>You beat the game.<br>You had success.<br>You... I'm running out of synonymous phrases.<br><br>Anyway, I hope you enjoyed my joke idle game.<br>I'll try to make something better next time.<br><br> - XQ22</p>";
+	} else {
+		switch(counter){
+			case 0:
+			document.getElementById("c").innerHTML = "You can read labels, right?";
+			break;
+			case 1:
+			document.getElementById("c").innerHTML = "Are you doing this for a reason?";
+			break;
+			case 2:
+			document.getElementById("c").innerHTML = "The label says \"$25001\". You need that to progress.";
+			break;
+			case 3:
+			document.getElementById("c").innerHTML = "Should I make it bigger?";
+			document.getElementById("a").style = "font-size:large";
+			break;
+			case 4:
+			document.getElementById("c").innerHTML = "Should I make it even bigger?";
+			document.getElementById("a").style = "font-size:x-large";
+			break;
+			case 5:
+			document.getElementById("c").innerHTML = "Should I make it even bigger than that!?";
+			document.getElementById("a").style = "font-size:xx-large";
+			break;
+			case 6:
+			document.getElementById("c").innerHTML = "That's enough.";
+			document.getElementById("a").style = "";
+			break;
+			case 7:
+			document.getElementById("c").innerHTML = "This is it. It will just loop from now on until you have enough coins.";
+			counter = -1;
+			break;
+		}
+		counter++;
+	}
+};
+function Timed(){
+	if(init){document.getElementById("Coincounter").innerHTML = "You have "+Math.round(coins)+" coins. How exciting.";}
+	coins+=rates[1];
+	if(coins===51){ //Terrible architecture for a terrible idle game
+		Display();
+	}
+	var x = setTimeout(Timed,50);
+};
+
+</script>
+</head>
+<body onload="Timed()"id="body" >
+<button onclick="Display()">BEGIN</button>
+</body>
+</html>
